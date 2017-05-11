@@ -2,6 +2,8 @@ INSTALL_DIR=~
 NJOBS=$(($(nproc)))
 SSD_DIR=$INSTALL_DIR/ssd
 
+set -eux
+
 if [ ! -d "/usr/local/cuda-8.0" ];
 then
 	echo ERROR, decompress CUDNN from https://developer.nvidia.com/cudnn to /usr/local/cuda-8.0
@@ -11,9 +13,9 @@ fi
 if [ ! -d "$SSD_DIR" ];
 then
 	echo "Creating $SSD_DIR does not exist";
-	#cp -r ~/ssd $INSTALL_DIR
 	cd $INSTALL_DIR
 	git clone ssh://git.blues/ssd.git
+	cd $SSD_DIR
 	git checkout origin/ssd
 	cp /home/getienne/Makefile.config.gpu $SSD_DIR/Makefile.config
 
@@ -37,7 +39,7 @@ then
 	then
 		echo PYTHONPATH already set
 	else
-		echo "export PYTHONPATH=/local/ssd/python:$PYTHONPATH" >> ~/.bashrc
+		echo "export PYTHONPATH=$INSTALL_DIR/python:$PYTHONPATH" >> ~/.bashrc
 	fi
 	source ~/.bashrc
 
@@ -57,10 +59,20 @@ if [ ! -d "$SSD_DIR/models/VGGNet" ];
 then
 	echo "Installing VGGNet models"
 	wget -P $SSD_DIR/models/VGGNet/ http://cs.unc.edu/~wliu/projects/ParseNet/VGG_ILSVRC_16_layers_fc_reduced.caffemodel
-	cd $SSD_DIR && tar xzf ~/Downloads/models_VGGNet_VOC0712_SSD_300x300.tar.gz
 else
 	echo "VGGNet models already installed"
 fi
+
+if [ ! -d "$SSD_DIR/models/VGGNet/VOC0712/SSD_300x300" ];
+then
+	echo "Installing VGGNet models"
+	cd $SSD_DIR && tar xzf ~/Downloads/models_VGGNet_VOC0712_SSD_300x300.tar.gz
+else
+	echo " ERROR: missing ~/Downloads/models_VGGNet_VOC0712_SSD_300x300.tar.gz"
+	exit
+fi
+
+
 
 if [ ! -d "~/Videos/STHZ6336.MOV" ];
 then

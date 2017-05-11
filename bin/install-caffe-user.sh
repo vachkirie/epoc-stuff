@@ -1,6 +1,6 @@
 INSTALL_DIR=~
-SSD_DIR=$INSTALL_DIR/ssd
 NJOBS=$(($(nproc)))
+SSD_DIR=$INSTALL_DIR/ssd
 
 set -eux
 
@@ -12,6 +12,7 @@ then
 	cd $SSD_DIR
 	git checkout origin/ssd
 	cp /home/getienne/Makefile.config.gpu $SSD_DIR/Makefile.config
+
 	cd $SSD_DIR
 	find $SSD_DIR -type f -exec sed -i -e 's^"hdf5.h"^"hdf5/serial/hdf5.h"^g' -e 's^"hdf5_hl.h"^"hdf5/serial/hdf5_hl.h"^g' '{}' \;
 	cd $SSD_DIR/python
@@ -34,7 +35,6 @@ fi
 
 
 cd $SSD_DIR
-
 make -j$NJOBS all
 make -j$NJOBS py
 make -j$NJOBS distribute
