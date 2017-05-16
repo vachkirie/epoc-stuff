@@ -1,4 +1,5 @@
-INSTALL_DIR=~
+
+INSTALL_DIR=~/work
 NJOBS=$(($(nproc)))
 SSD_DIR=$INSTALL_DIR/ssd
 
@@ -6,8 +7,10 @@ set -eux
 
 if [ ! -d "/usr/local/cuda-8.0" ];
 then
-	echo ERROR, decompress CUDNN from https://developer.nvidia.com/cudnn to /usr/local/cuda-8.0
-	exit
+	echo ERROR, decompress CUDNN from https://developer.nvidia.com/cudnn to /usr/local/
+	cd /usr/local/
+	sudo tar -xzf ~/cudnn-8.0-linux-x64-v5.0-ga.tgz
+	sudo ln -s cuda cuda-8.0
 fi
 
 if [ ! -d "$SSD_DIR" ];
@@ -17,7 +20,7 @@ then
 	git clone ssh://git.blues/ssd.git
 	cd $SSD_DIR
 	git checkout origin/ssd
-	cp /home/getienne/Makefile.config.gpu $SSD_DIR/Makefile.config
+	cp $SSD_DIR/Makefile.config.example $SSD_DIR/Makefile.config
 
 	cd $SSD_DIR
 	find $SSD_DIR -type f -exec sed -i -e 's^"hdf5.h"^"hdf5/serial/hdf5.h"^g' -e 's^"hdf5_hl.h"^"hdf5/serial/hdf5_hl.h"^g' '{}' \;
