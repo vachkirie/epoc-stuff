@@ -1,12 +1,13 @@
-INSTALL_DIR=/local
+INSTALL_DIR=~/work
 NJOBS=$(($(nproc)))
 OCV_DIR=$INSTALL_DIR/opencv
+
+set -eux
 
 if [ ! -d "$INSTALL_DIR" ];
 then
 	echo "Creating Install folder $INSTALL_DIR"
 	mkdir $INSTALL_DIR
-	sudo chmod 777 $INSTALL_DIR
 fi
 
 
